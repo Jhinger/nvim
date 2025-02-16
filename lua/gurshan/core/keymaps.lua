@@ -31,7 +31,3 @@ keymap.set("n", "<leader>tl", "<cmd>bnext<CR>", { desc = "Go to the next buffer"
 keymap.set("n", "<leader>th", "<cmd>bprevious<CR>", { desc = "Go to the previous buffer" })
 
 keymap.set("n", "S", "<cmd>w<CR>", { desc = "Save file" })
-
--- Map Tab and Shift-Tab
-vim.api.nvim_set_keymap("i", "<Tab>", "<C-t>", { noremap = true })
-vim.api.nvim_set_keymap("i", "<S-Tab>", "<C-d>", { noremap = true })

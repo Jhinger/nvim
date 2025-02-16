@@ -22,9 +22,11 @@ return {
 				mappings = {
 					i = {
 						["fc"] = actions.close,
+						["<C-t>"] = actions.nop,
 					},
 					n = {
 						["fc"] = actions.close,
+						["<C-t>"] = actions.nop,
 					},
 				},
 			},
