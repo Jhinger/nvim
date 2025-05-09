@@ -15,7 +15,6 @@ return {
 			bg = "#112638",
 			inactive_bg = "#2c3043",
 		}
-
 		local lualine_theme = {
 			normal = {
 				a = { bg = colors.blue, fg = colors.bg, gui = "bold" },
