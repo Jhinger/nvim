@@ -4,5 +4,6 @@ return {
 	lazy = false,
 	opts = {
 		input = {},
+		win = {},
 	},
 }

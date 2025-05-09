@@ -2,18 +2,32 @@ return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
-		"hrsh7th/cmp-nvim-lsp",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
-		{ "folke/neodev.nvim", opts = {} },
+		{
+			"folke/lazydev.nvim",
+			ft = "lua",
+			opts = {
+				library = {
+					{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+				},
+			},
+		},
+		{
+			"hrsh7th/nvim-cmp",
+			opts = function(_, opts)
+				opts.sources = opts.sources or {}
+				table.insert(opts.sources, {
+					name = "lazydev",
+					group_index = 0,
+				})
+			end,
+		},
+		"hrsh7th/cmp-nvim-lsp",
+		-- { "folke/neodev.nvim", opts = {} },
 	},
 	config = function()
-		-- import lspconfig plugin
 		local lspconfig = require("lspconfig")
-
-		-- import mason_lspconfig plugin
 		local mason_lspconfig = require("mason-lspconfig")
-
-		-- import cmp-nvim-lsp plugin
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 		local keymap = vim.keymap
@@ -21,8 +35,6 @@ return {
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
-				-- Buffer local mappings.
-				-- See `:help vim.lsp.*` for documentation on any of the below functions
 				local opts = { buffer = ev.buf, silent = true }
 
 				opts.desc = "Show LSP references"
@@ -56,7 +68,9 @@ return {
 				keymap.set("n", "<leader>ld", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
 
 				opts.desc = "Show documentation for what is under cursor"
-				keymap.set("n", "<leader>D", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
+				keymap.set("n", "<leader>D", function()
+					vim.lsp.buf.hover({ border = "single", anchor_bias = "below" })
+				end, opts) -- show documentation for what is under cursor
 
 				opts.desc = "Restart LSP"
 				keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
@@ -82,10 +96,22 @@ return {
 			["ts_ls"] = function()
 				lspconfig.ts_ls.setup({
 					capabilities = capabilities,
-					settings = {
-						completions = {
-							completeFunctionCalls = true,
+					root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
+					single_file_support = true,
+					init_options = {
+						hostInfo = "neovim",
+						maxTsServerMemory = 4096,
+						tsserver = {
+							useSyntaxServer = "auto",
 						},
+					},
+					filetypes = {
+						"javascript",
+						"javascriptreact",
+						"javascript.jsx",
+						"typescript",
+						"typescriptreact",
+						"typescript.tsx",
 					},
 				})
 			end,

@@ -17,7 +17,7 @@ return {
 				},
 			},
 			panel = {
-				enabled = "false",
+				enabled = false,
 			},
 		})
 	end,

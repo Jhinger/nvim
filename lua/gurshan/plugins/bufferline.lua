@@ -4,6 +4,12 @@ return {
 	version = "*",
 	opts = {
 		highlights = {
+			fill = {
+				bg = "NONE",
+			},
+			background = {
+				bg = "NONE",
+			},
 			buffer_selected = { bold = true },
 			diagnostic_selected = { bold = true },
 			info_selected = { bold = true },
@@ -16,7 +22,7 @@ return {
 		options = {
 			diagnostics = "nvim_lsp",
 			mode = "buffers",
-			seperator_style = "slant",
+			separator_style = { " ", " " },
 			themeable = true,
 			show_buffer_icons = true,
 			show_close_icon = false,
