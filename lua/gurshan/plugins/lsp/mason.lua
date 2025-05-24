@@ -35,7 +35,7 @@ return {
 				"lua_ls",
 				"gopls",
 				"solargraph",
-				"volar", -- Vue
+				"vue_ls", -- Vue
 				"svelte",
 				"marksman", -- Markdown
 			},

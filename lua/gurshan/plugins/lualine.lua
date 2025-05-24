@@ -64,6 +64,18 @@ return {
 					{ "fileformat" },
 					{ "filetype" },
 				},
+				lualine_c = {
+					{
+						"filename",
+						path = 1, -- 0: Just the filename, 1: Relative path, 2: Absolute path
+						shorting_target = 40,
+						symbols = {
+							modified = " ●",
+							readonly = " ",
+							unnamed = "[No Name]",
+						},
+					},
+				},
 			},
 		})
 	end,

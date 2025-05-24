@@ -23,7 +23,6 @@ return {
 			end,
 		},
 		"hrsh7th/cmp-nvim-lsp",
-		-- { "folke/neodev.nvim", opts = {} },
 	},
 	config = function()
 		local lspconfig = require("lspconfig")
@@ -77,113 +76,93 @@ return {
 			end,
 		})
 
-		-- used to enable autocompletion (assign to every lsp server config)
-		local capabilities = cmp_nvim_lsp.default_capabilities()
-
 		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		mason_lspconfig.setup_handlers({
-			-- default handler for installed servers
-			function(server_name)
-				lspconfig[server_name].setup({
-					capabilities = capabilities,
-				})
-			end,
-			["ts_ls"] = function()
-				lspconfig.ts_ls.setup({
-					capabilities = capabilities,
-					root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
-					single_file_support = true,
-					init_options = {
-						hostInfo = "neovim",
-						maxTsServerMemory = 4096,
-						tsserver = {
-							useSyntaxServer = "auto",
-						},
+		-- used to enable autocompletion (assign to every lsp server config)
+		local capabilities = cmp_nvim_lsp.default_capabilities()
+
+		lspconfig.ts_ls.setup({
+			capabilities = capabilities,
+			root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
+			single_file_support = true,
+			init_options = {
+				hostInfo = "neovim",
+				maxTsServerMemory = 4096,
+				tsserver = {
+					useSyntaxServer = "auto",
+				},
+			},
+			filetypes = {
+				"javascript",
+				"javascriptreact",
+				"javascript.jsx",
+				"typescript",
+				"typescriptreact",
+				"typescript.tsx",
+			},
+		})
+		lspconfig.solargraph.setup({
+			capabilities = capabilities,
+			root_dir = lspconfig.util.root_pattern("Gemfile", ".git", "."),
+			settings = {
+				solargraph = {
+					autoformat = true,
+					completion = true,
+					diagnostics = true,
+					folding = true,
+					references = true,
+					rename = true,
+					symbols = true,
+				},
+			},
+		})
+		lspconfig.gopls.setup({
+			capabilities = capabilities,
+			cmd = { "gopls" },
+			filetypes = { "go", "gomod", "gowork", "gotmpl" },
+			settings = {
+				gopls = {
+					analyses = {
+						unusedparams = true,
 					},
-					filetypes = {
-						"javascript",
-						"javascriptreact",
-						"javascript.jsx",
-						"typescript",
-						"typescriptreact",
-						"typescript.tsx",
+					staticcheck = true,
+					gofumpt = true,
+				},
+			},
+		})
+		lspconfig.rubocop.setup({
+			capabilities = capabilities,
+			cmd = { "bundle", "exec", "rubocop" },
+			root_dir = lspconfig.util.root_pattern("Gemfile", ".git", "."),
+		})
+		lspconfig.vue_ls.setup({
+			capabilities = capabilities,
+			filetypes = { "vue" },
+			init_options = {
+				vue = {
+					hybridMode = false,
+				},
+				typescript = {
+					tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
+				},
+			},
+		})
+		lspconfig.lua_ls.setup({
+			capabilities = capabilities,
+			settings = {
+				Lua = {
+					diagnostics = {
+						globals = { "vim" },
 					},
-				})
-			end,
-			["solargraph"] = function()
-				lspconfig.solargraph.setup({
-					capabilities = capabilities,
-					root_dir = lspconfig.util.root_pattern("Gemfile", ".git", "."),
-					settings = {
-						solargraph = {
-							autoformat = true,
-							completion = true,
-							diagnostics = true,
-							folding = true,
-							references = true,
-							rename = true,
-							symbols = true,
-						},
+					completion = {
+						callSnippet = "Replace",
 					},
-				})
-			end,
-			["gopls"] = function()
-				lspconfig.gopls.setup({
-					capabilities = capabilities,
-					cmd = { "gopls" },
-					filetypes = { "go", "gomod", "gowork", "gotmpl" },
-					settings = {
-						gopls = {
-							analyses = {
-								unusedparams = true,
-							},
-							staticcheck = true,
-							gofumpt = true,
-						},
-					},
-				})
-			end,
-			["rubocop"] = function()
-				lspconfig.rubocop.setup({
-					capabilities = capabilities,
-					cmd = { "bundle", "exec", "rubocop" },
-					root_dir = lspconfig.util.root_pattern("Gemfile", ".git", "."),
-				})
-			end,
-			["volar"] = function()
-				lspconfig.volar.setup({
-					capabilities = capabilities,
-					filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact" },
-					init_options = {
-						vue = {
-							hybridMode = false,
-						},
-						typescript = {
-							tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
-						},
-					},
-				})
-			end,
-			["lua_ls"] = function()
-				lspconfig["lua_ls"].setup({
-					capabilities = capabilities,
-					settings = {
-						Lua = {
-							diagnostics = {
-								globals = { "vim" },
-							},
-							completion = {
-								callSnippet = "Replace",
-							},
-						},
-					},
-				})
-			end,
+				},
+			},
 		})
 	end,
 }

@@ -95,6 +95,22 @@ return {
 				bg = "#0d47a1",
 				bold = true,
 			},
+			warning = {
+				fg = "#ffca28", -- Blue for TODO:
+				bg = "#222436", -- Match the background for inactive buffers
+			},
+			warning_visible = {
+				fg = "#ffca28", -- Blue for TODO:
+				bg = "#222436", -- Match the background for visible buffers
+			},
+			info = {
+				fg = "#82aaff", -- Purple for NOTE
+				bg = "#222436", -- Match the background for inactive buffers
+			},
+			info_visible = {
+				fg = "#82aaff", -- Purple for NOTE
+				bg = "#222436", -- Match the background for visible buffers
+			},
 			info_selected = {
 				fg = "#ffffff",
 				bg = "#0d47a1",
@@ -124,6 +140,21 @@ return {
 				fg = "#ffffff",
 				bg = "#0d47a1",
 				bold = true,
+			},
+			duplicate_selected = {
+				fg = "#ffffff", -- Match the foreground of buffer_selected (white)
+				bg = "#0d47a1", -- Match the background of buffer_selected (blue)
+				italic = true,
+			},
+			duplicate_visible = {
+				fg = "#d9d9d9", -- Match the foreground of buffer_visible (light gray)
+				bg = "#222436", -- Match the background of buffer_visible (dark background)
+				italic = true,
+			},
+			duplicate = {
+				fg = "#d9d9d9", -- Match the foreground of background (light gray)
+				bg = "#222436", -- Match the background of background (dark background)
+				italic = true,
 			},
 		},
 		options = {
