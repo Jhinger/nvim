@@ -87,7 +87,7 @@ return {
 
 		lspconfig.ts_ls.setup({
 			capabilities = capabilities,
-			root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
+			root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
 			single_file_support = true,
 			init_options = {
 				hostInfo = "neovim",
@@ -105,9 +105,25 @@ return {
 				"typescript.tsx",
 			},
 		})
+		lspconfig.svelte.setup({
+			capabilities = capabilities,
+			settings = {
+				svelte = {
+					plugin = {
+						typescript = {
+							enable = true,
+						},
+						css = {
+							enable = true,
+						},
+					},
+				},
+			},
+		})
 		lspconfig.solargraph.setup({
 			capabilities = capabilities,
 			root_dir = lspconfig.util.root_pattern("Gemfile", ".git", "."),
+			cmd = { "bundle", "exec", "solargraph", "stdio" },
 			settings = {
 				solargraph = {
 					autoformat = true,

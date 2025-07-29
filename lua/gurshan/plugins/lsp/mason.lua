@@ -48,7 +48,7 @@ return {
 				"eslint_d",
 				"rufo",
 				"golangci-lint",
-				-- "rubocop"
+				-- "rubocop",
 			},
 		})
 	end,
