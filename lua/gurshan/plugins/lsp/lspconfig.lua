@@ -25,8 +25,6 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
-		local lspconfig = require("lspconfig")
-		local mason_lspconfig = require("mason-lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 		local keymap = vim.keymap
@@ -60,12 +58,6 @@ return {
 				opts.desc = "Show line diagnostics"
 				keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
 
-				opts.desc = "Go to previous diagnostic"
-				keymap.set("n", "<leader>hd", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
-
-				opts.desc = "Go to next diagnostic"
-				keymap.set("n", "<leader>ld", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
-
 				opts.desc = "Show documentation for what is under cursor"
 				keymap.set("n", "<leader>D", function()
 					vim.lsp.buf.hover({ border = "single", anchor_bias = "below" })
@@ -85,9 +77,9 @@ return {
 		-- used to enable autocompletion (assign to every lsp server config)
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
-		lspconfig.ts_ls.setup({
+		-- TypeScript / JavaScript (tsserver via ts_ls)
+		vim.lsp.config("ts_ls", {
 			capabilities = capabilities,
-			root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
 			single_file_support = true,
 			init_options = {
 				hostInfo = "neovim",
@@ -105,7 +97,9 @@ return {
 				"typescript.tsx",
 			},
 		})
-		lspconfig.svelte.setup({
+
+		-- Svelte
+		vim.lsp.config("svelte", {
 			capabilities = capabilities,
 			settings = {
 				svelte = {
@@ -120,9 +114,10 @@ return {
 				},
 			},
 		})
-		lspconfig.solargraph.setup({
+
+		-- Ruby (solargraph)
+		vim.lsp.config("solargraph", {
 			capabilities = capabilities,
-			root_dir = lspconfig.util.root_pattern("Gemfile", ".git", "."),
 			cmd = { "bundle", "exec", "solargraph", "stdio" },
 			settings = {
 				solargraph = {
@@ -136,7 +131,9 @@ return {
 				},
 			},
 		})
-		lspconfig.gopls.setup({
+
+		-- Go (gopls)
+		vim.lsp.config("gopls", {
 			capabilities = capabilities,
 			cmd = { "gopls" },
 			filetypes = { "go", "gomod", "gowork", "gotmpl" },
@@ -150,12 +147,16 @@ return {
 				},
 			},
 		})
-		lspconfig.rubocop.setup({
+
+		-- Ruby (rubocop LSP)
+		vim.lsp.config("rubocop", {
 			capabilities = capabilities,
 			cmd = { "bundle", "exec", "rubocop" },
-			root_dir = lspconfig.util.root_pattern("Gemfile", ".git", "."),
 		})
-		lspconfig.vue_ls.setup({
+		vim.lsp.enable("rubocop")
+
+		-- Vue (vue_ls / Volar)
+		vim.lsp.config("vue_ls", {
 			capabilities = capabilities,
 			filetypes = { "vue" },
 			init_options = {
@@ -167,7 +168,9 @@ return {
 				},
 			},
 		})
-		lspconfig.lua_ls.setup({
+
+		-- Lua (lua_ls)
+		vim.lsp.config("lua_ls", {
 			capabilities = capabilities,
 			settings = {
 				Lua = {

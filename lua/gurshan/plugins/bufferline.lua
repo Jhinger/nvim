@@ -96,20 +96,20 @@ return {
 				bold = true,
 			},
 			warning = {
-				fg = "#ffca28", -- Blue for TODO:
-				bg = "#222436", -- Match the background for inactive buffers
+				fg = "#ffca28",
+				bg = "#222436", -- Changed from "#0d47a1"
 			},
 			warning_visible = {
-				fg = "#ffca28", -- Blue for TODO:
-				bg = "#222436", -- Match the background for visible buffers
+				fg = "#ffca28",
+				bg = "#222436", -- Changed from "#0d47a1"
 			},
 			info = {
 				fg = "#82aaff", -- Purple for NOTE
-				bg = "#222436", -- Match the background for inactive buffers
+				bg = "#0d47a1", -- Match the background for inactive buffers
 			},
 			info_visible = {
 				fg = "#82aaff", -- Purple for NOTE
-				bg = "#222436", -- Match the background for visible buffers
+				bg = "#0d47a1", -- Match the background for visible buffers
 			},
 			info_selected = {
 				fg = "#ffffff",

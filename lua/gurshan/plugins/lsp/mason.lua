@@ -3,6 +3,7 @@ return {
 	dependencies = {
 		"mason-org/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		"neovim/nvim-lspconfig",
 	},
 	config = function()
 		-- import mason
@@ -24,8 +25,6 @@ return {
 		})
 
 		mason_lspconfig.setup({
-			-- list of servers for mason to install
-			automatic_installation = true,
 			ensure_installed = {
 				"docker_compose_language_service",
 				"ts_ls",
@@ -39,6 +38,7 @@ return {
 				"svelte",
 				"marksman", -- Markdown
 			},
+			automatic_enable = true,
 		})
 
 		mason_tool_installer.setup({
