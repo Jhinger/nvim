@@ -142,6 +142,7 @@ return {
 			enabled = true,
 			replace_netrw = true,
 			trash = true,
+			hidden = true,
 		},
 
 		lazygit = {
@@ -152,12 +153,15 @@ return {
 			layout = { preset = "telescope" },
 			sources = {
 				explorer = {
+					hidden = true,
+					trash = true,
 					exclude = { ".DS_Store", "node_modules" },
 					win = {
 						input = {},
 						list = {
 							keys = {
-								["f"] = "focus_input",
+								["J"] = "explorer_down_fast",
+								["K"] = "explorer_up_fast",
 							},
 						},
 					},
@@ -165,6 +169,18 @@ return {
 				files = {
 					hidden = true,
 				},
+			},
+			actions = {
+				explorer_down_fast = function(picker)
+					for _ = 1, 5 do
+						Snacks.picker.actions.list_down(picker)
+					end
+				end,
+				explorer_up_fast = function(picker)
+					for _ = 1, 5 do
+						Snacks.picker.actions.list_up(picker)
+					end
+				end,
 			},
 			win = {
 				input = {
@@ -185,6 +201,10 @@ return {
 			indent = {
 				char = "┊",
 			},
+		},
+
+		image = {
+			enabled = true,
 		},
 	},
 }
