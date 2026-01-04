@@ -164,14 +164,6 @@ return {
 			themeable = true,
 			show_buffer_icons = true,
 			show_close_icon = false,
-			offsets = {
-				{
-					filetype = "NvimTree",
-					text_align = "center",
-					highlight = "Directory",
-					separator = true,
-				},
-			},
 		},
 	},
 }

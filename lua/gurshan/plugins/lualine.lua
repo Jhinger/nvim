@@ -51,7 +51,7 @@ return {
 		lualine.setup({
 			options = {
 				theme = lualine_theme,
-				disabled_filetypes = { "NvimTree", "alpha" },
+				disabled_filetypes = { "snacks_dashboard" },
 			},
 			sections = {
 				lualine_x = {

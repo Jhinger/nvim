@@ -21,12 +21,19 @@ vim.api.nvim_create_user_command("BufDel", function()
 		vim.cmd("bprevious")
 		vim.cmd("bdelete " .. current_buf)
 	else
-		vim.cmd("Alpha")
+		if _G.Snacks and Snacks.dashboard and Snacks.dashboard.open then
+			Snacks.dashboard.open()
+		else
+			vim.cmd("enew")
+		end
 		vim.cmd("bdelete " .. current_buf)
 	end
 end, {})
 
 keymap.set("n", "<leader>tx", ":BufDel<CR>", { desc = "Close current buffer" })
+
+keymap.set("n", "<leader>el", "<cmd>wincmd l<CR>", { desc = "Focus the next right panel" })
+
 keymap.set("n", "<leader>tl", "<cmd>bnext<CR>", { desc = "Go to the next buffer" })
 keymap.set("n", "<leader>th", "<cmd>bprevious<CR>", { desc = "Go to the previous buffer" })
 

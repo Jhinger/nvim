@@ -20,6 +20,9 @@ return {
 				["comments"] = { fg = "$ligher_gray", fmt = "none" },
 				["@comment"] = { fg = "$lighter_gray", fmt = "none" },
 				["@lsp.type.comment"] = { fg = "$lighter_gray", fmt = "none" },
+
+				SnacksIndent = { fg = "#3b3f4c" }, -- subtle base indent (dark gray)
+				SnacksIndentScope = { fg = "#86baba" }, -- lighter teal for current block
 			},
 		})
 
