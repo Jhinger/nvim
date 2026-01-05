@@ -2,6 +2,26 @@ return {
 	"folke/snacks.nvim",
 	priority = 1000,
 	lazy = false,
+	init = function()
+		vim.api.nvim_create_autocmd("VimEnter", {
+			callback = function()
+				if not _G.Snacks or not Snacks.explorer then
+					return
+				end
+				local explorer = nil
+				if Snacks.picker and Snacks.picker.get then
+					explorer = Snacks.picker.get({ source = "explorer" })[1]
+				end
+				if explorer then
+					return
+				end
+				explorer = Snacks.explorer.reveal({ buf = 0 })
+				if explorer and explorer.focus then
+					explorer:focus("list", { show = true })
+				end
+			end,
+		})
+	end,
 	keys = {
 		{
 			"<leader>ef",
@@ -76,11 +96,6 @@ return {
 			end,
 			desc = "Find Todos",
 		},
-		-- Additional Snacks picker keymaps (uncomment any you like)
-		-- { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
-		-- { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Git files" },
-		-- { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-		-- { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent files (all)" },
 	},
 	---@type snacks.Config
 	opts = {
@@ -142,7 +157,6 @@ return {
 			enabled = true,
 			replace_netrw = true,
 			trash = true,
-			hidden = true,
 		},
 
 		lazygit = {
@@ -154,8 +168,17 @@ return {
 			sources = {
 				explorer = {
 					hidden = true,
+					ignored = true,
 					trash = true,
 					exclude = { ".DS_Store", "node_modules" },
+					-- Prefer non-hidden paths when searching in explorer
+					transform = function(item, ctx)
+						local path = item.file or item.text or ""
+						if path:match("^%.") or path:match("/%.") then
+							item.score_add = (item.score_add or 0) - 100
+						end
+						return item
+					end,
 					win = {
 						input = {},
 						list = {
@@ -166,9 +189,7 @@ return {
 						},
 					},
 				},
-				files = {
-					hidden = true,
-				},
+				files = {},
 			},
 			actions = {
 				explorer_down_fast = function(picker)
