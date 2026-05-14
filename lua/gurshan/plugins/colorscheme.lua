@@ -16,14 +16,13 @@ return {
 			colors = {
 				lighter_gray = "#75c6d1",
 			},
-				highlights = {
-					["comments"] = { fg = "$lighter_gray", fmt = "none" },
-					["@comment"] = { fg = "$lighter_gray", fmt = "none" },
-					["@lsp.type.comment"] = { fg = "$lighter_gray", fmt = "none" },
-
-					SnacksIndent = { fg = "#3b3f4c" }, -- subtle base indent (dark gray)
-					SnacksIndentScope = { fg = "#86baba" }, -- lighter teal for current block
-				},
+			highlights = {
+				Comments = { fg = "$lighter_gray", fmt = "none" },
+				["@comment"] = { fg = "$lighter_gray", fmt = "none" },
+				["@lsp.type.comment"] = { fg = "$lighter_gray", fmt = "none" },
+				SnacksIndent = { fg = "#3b3f4c" },
+				SnacksIndentScope = { fg = "#86baba" },
+			},
 		})
 
 		vim.cmd("colorscheme onedark")

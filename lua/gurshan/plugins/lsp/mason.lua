@@ -1,19 +1,12 @@
 return {
-	"mason-org/mason.nvim",
+	"williamboman/mason.nvim",
 	dependencies = {
-		"mason-org/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		"neovim/nvim-lspconfig",
 	},
 	config = function()
-		-- import mason
 		local mason = require("mason")
-
-		-- import mason-lspconfig
-		local mason_lspconfig = require("mason-lspconfig")
 		local mason_tool_installer = require("mason-tool-installer")
 
-		-- enable mason and configure icons
 		mason.setup({
 			ui = {
 				icons = {
@@ -24,31 +17,16 @@ return {
 			},
 		})
 
-		mason_lspconfig.setup({
-			ensure_installed = {
-				"docker_compose_language_service",
-				"ts_ls",
-				"html",
-				"cssls",
-				"tailwindcss",
-				"lua_ls",
-				"gopls",
-				"solargraph",
-				"vue_ls", -- Vue
-				"svelte",
-				"marksman", -- Markdown
-			},
-			automatic_enable = true,
-		})
-
 		mason_tool_installer.setup({
 			ensure_installed = {
-				"prettier", -- prettier formatter
-				"stylua", -- lua formatter
+				"prettier",
+				"stylua",
 				"eslint_d",
 				"rufo",
 				"golangci-lint",
-				-- "rubocop",
+				"tflint",
+				"tfsec",
+				"ruby-lsp",
 			},
 		})
 	end,

@@ -1,9 +1,13 @@
 return {
 	"lewis6991/gitsigns.nvim",
-	commit = "3d01bad517a9cd8d6b1ac6871e16188375c2853b",
 	event = { "BufReadPre", "BufNewFile" },
 	opts = {
 		current_line_blame = true,
+		current_line_blame_opts = {
+			virt_text = true,
+			virt_text_pos = "eol",
+			ignore_whitespace = false,
+		},
 		signs = {
 			delete = {
 				show_count = true,
@@ -18,7 +22,9 @@ return {
 
 			map("n", "<leader>gb", function()
 				gs.blame_line({ full = true })
-			end, "Git Blame line")
+			end, "Git blame line")
+			map("n", "<leader>gR", gs.reset_buffer, "Reset buffer")
+			map("n", "<leader>gS", gs.stage_buffer, "Stage buffer")
 		end,
 	},
 }

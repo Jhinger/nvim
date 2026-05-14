@@ -3,166 +3,56 @@ return {
 	priority = 1000,
 	lazy = false,
 	init = function()
-		vim.api.nvim_create_autocmd("VimEnter", {
-			callback = function()
-				if not _G.Snacks or not Snacks.explorer then
-					return
-				end
-				local explorer = nil
-				if Snacks.picker and Snacks.picker.get then
-					explorer = Snacks.picker.get({ source = "explorer" })[1]
-				end
-				if explorer then
-					return
-				end
-				explorer = Snacks.explorer.reveal({ buf = 0 })
-				if explorer and explorer.focus then
-					explorer:focus("list", { show = true })
-				end
-			end,
-		})
+		vim.api.nvim_create_user_command("LazyGit", function()
+			Snacks.lazygit()
+		end, {})
 	end,
-	keys = {
-		{
-			"<leader>ef",
-			function()
-				Snacks.explorer()
-			end,
-			desc = "Open file explorer",
-		},
-		{
-			"<leader>ec",
-			function()
-				local explorer = nil
-				if Snacks.picker and Snacks.picker.get then
-					explorer = Snacks.picker.get({ source = "explorer" })[1]
-				end
-				if not explorer then
-					explorer = Snacks.explorer()
-				end
-				if explorer and explorer.action then
-					explorer:action("explorer_close_all")
-				end
-			end,
-			desc = "Collapse file explorer",
-		},
-		{
-			"<leader>eh",
-			function()
-				local explorer = Snacks.explorer.reveal({ buf = 0 })
-				if explorer and explorer.focus then
-					explorer:focus("list", { show = true })
-				end
-			end,
-			desc = "Focus file explorer on current file",
-		},
-		{
-			"<leader>lg",
-			function()
-				if Snacks and Snacks.lazygit then
-					Snacks.lazygit()
-				else
-					vim.cmd("LazyGit")
-				end
-			end,
-			desc = "Open lazy git",
-		},
-		-- Snacks picker (replaces Telescope)
-		{
-			"<leader>ff",
-			function()
-				Snacks.picker.files()
-			end,
-			desc = "Fuzzy find files in cwd",
-		},
-		{
-			"<leader>fs",
-			function()
-				Snacks.picker.recent({ filter = { cwd = true } })
-			end,
-			desc = "Fuzzy find recent files",
-		},
-		{
-			"<leader>fw",
-			function()
-				Snacks.picker.grep()
-			end,
-			desc = "Find string in cwd",
-		},
-		{
-			"<leader>ft",
-			function()
-				Snacks.picker.todo_comments()
-			end,
-			desc = "Find Todos",
-		},
-	},
-	---@type snacks.Config
 	opts = {
 		dashboard = {
 			enabled = true,
 			preset = {
 				header = [[
-                                                      
-  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ 
-  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ 
-  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ 
-  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
-  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ 
-  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ 
-                                                      
+                                                       
+   ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ 
+   ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ 
+   ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ 
+   ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
+   ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ 
+   ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ 
+                                                       
 ]],
 				keys = {
-					{
-						icon = " ",
-						key = "e",
-						desc = "Toggle File Explorer",
-						action = function()
-							Snacks.explorer.reveal()
-						end,
-					},
-					{
-						icon = " ",
-						key = "f",
-						desc = "Find File",
-						action = function()
-							Snacks.picker.files()
-						end,
-					},
-					{
-						icon = " ",
-						key = "w",
-						desc = "Find Word",
-						action = function()
-							Snacks.picker.grep()
-						end,
-					},
-					{
-						icon = "󰦛 ",
-						key = "s",
-						desc = "Restore CWD Session",
-						action = ":SessionRestore",
-					},
-					{
-						icon = " ",
-						key = "q",
-						desc = "Exit",
-						action = ":qa",
-					},
+					{ icon = " ", key = "e", desc = "Toggle File Explorer", action = function() Snacks.explorer() end },
+					{ icon = " ", key = "f", desc = "Find File", action = function() Snacks.picker.files() end },
+					{ icon = " ", key = "w", desc = "Find Word", action = function() Snacks.picker.grep() end },
+					{ icon = "󰦛 ", key = "s", desc = "Restore CWD Session", action = ":SessionRestore" },
+					{ icon = " ", key = "q", desc = "Exit", action = ":qa" },
 				},
 			},
 		},
-
 		explorer = {
 			enabled = true,
 			replace_netrw = true,
 			trash = true,
 		},
-
 		lazygit = {
 			enabled = true,
+			configure = true,
+			theme = {
+				activeBorderColor = { fg = "MatchParen", bold = true },
+				inactiveBorderColor = { fg = "FloatBorder" },
+				searchingActiveBorderColor = { fg = "DiagnosticWarn", bold = true },
+				optionsTextColor = { fg = "Function" },
+				selectedLineBgColor = { bg = "CursorLine" },
+				selectedRangeBgColor = { bg = "CursorLine" },
+				cherryPickedCommitBgColor = { bg = "Visual" },
+				cherryPickedCommitFgColor = { fg = "Function" },
+				markedBaseCommitBgColor = { bg = "Visual" },
+				markedBaseCommitFgColor = { fg = "Function" },
+				unstagedChangesColor = { fg = "DiagnosticError" },
+				defaultFgColor = { fg = "Normal" },
+			},
 		},
-
 		picker = {
 			layout = { preset = "telescope" },
 			sources = {
@@ -171,14 +61,6 @@ return {
 					ignored = true,
 					trash = true,
 					exclude = { ".DS_Store", "node_modules" },
-					-- Prefer non-hidden paths when searching in explorer
-					transform = function(item, ctx)
-						local path = item.file or item.text or ""
-						if path:match("^%.") or path:match("/%.") then
-							item.score_add = (item.score_add or 0) - 100
-						end
-						return item
-					end,
 					win = {
 						input = {},
 						list = {
@@ -216,16 +98,34 @@ return {
 				},
 			},
 		},
-
 		indent = {
 			enabled = true,
 			indent = {
 				char = "┊",
 			},
 		},
-
 		image = {
 			enabled = true,
 		},
+	},
+	keys = {
+		{ "<leader>ef", function() Snacks.explorer() end, desc = "Open file explorer" },
+		{ "<leader>ec", function()
+			local explorer = Snacks.picker.get({ source = "explorer" })[1]
+			if explorer and explorer.action then
+				explorer:action("explorer_close_all")
+			end
+		end, desc = "Collapse file explorer" },
+		{ "<leader>eh", function()
+			local explorer = Snacks.explorer.reveal({ buf = 0 })
+			if explorer and explorer.focus then
+				explorer:focus("list", { show = true })
+			end
+		end, desc = "Focus explorer on current file" },
+		{ "<leader>lg", function() Snacks.lazygit() end, desc = "Open lazygit" },
+		{ "<leader>ff", function() Snacks.picker.files() end, desc = "Find files" },
+		{ "<leader>fs", function() Snacks.picker.recent({ filter = { cwd = true } }) end, desc = "Recent files" },
+		{ "<leader>fw", function() Snacks.picker.grep() end, desc = "Grep" },
+		{ "<leader>ft", function() Snacks.picker.todo_comments() end, desc = "Find TODOs" },
 	},
 }

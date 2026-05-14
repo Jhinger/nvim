@@ -1,8 +1,8 @@
 return {
 	"neovim/nvim-lspconfig",
-	event = { "BufReadPre", "BufNewFile" },
+	lazy = false,
 	dependencies = {
-		{ "antosha417/nvim-lsp-file-operations", config = true },
+		"williamboman/mason.nvim",
 		{
 			"folke/lazydev.nvim",
 			ft = "lua",
@@ -25,69 +25,17 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
+		local mason_path = vim.fn.glob(vim.fn.stdpath("data") .. "/mason/bin/")
+		vim.env.PATH = mason_path .. ":" .. vim.env.PATH
+
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-
-		local keymap = vim.keymap
-
-		vim.api.nvim_create_autocmd("LspAttach", {
-			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-			callback = function(ev)
-				local opts = { buffer = ev.buf, silent = true }
-
-				opts.desc = "Show LSP references"
-				keymap.set("n", "<leader>gr", function()
-					Snacks.picker.lsp_references()
-				end, opts) -- show definition, references
-
-				opts.desc = "Go to declaration"
-				keymap.set("n", "<leader>gd", vim.lsp.buf.declaration, opts) -- go to declaration
-
-				opts.desc = "Show LSP definitions"
-				keymap.set("n", "<leader>gld", function()
-					Snacks.picker.lsp_definitions()
-				end, opts) -- show lsp definitions
-
-				opts.desc = "Show LSP implementations"
-				keymap.set("n", "<leader>gi", function()
-					Snacks.picker.lsp_implementations()
-				end, opts) -- show lsp implementations
-
-				opts.desc = "Show LSP type definitions"
-				keymap.set("n", "<leader>gt", function()
-					Snacks.picker.lsp_type_definitions()
-				end, opts) -- show lsp type definitions
-
-				opts.desc = "See available code actions"
-				keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
-
-				opts.desc = "Smart rename"
-				keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
-
-				opts.desc = "Show line diagnostics"
-				keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
-
-				opts.desc = "Show documentation for what is under cursor"
-				keymap.set("n", "<leader>D", function()
-					vim.lsp.buf.hover({ border = "single", anchor_bias = "below" })
-				end, opts) -- show documentation for what is under cursor
-
-				opts.desc = "Restart LSP"
-				keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
-			end,
-		})
-
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-		for type, icon in pairs(signs) do
-			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-		end
-
-		-- used to enable autocompletion (assign to every lsp server config)
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
-		-- TypeScript / JavaScript (tsserver via ts_ls)
-		vim.lsp.config("ts_ls", {
+		vim.lsp.config("*", {
 			capabilities = capabilities,
+		})
+
+		vim.lsp.config("ts_ls", {
 			single_file_support = true,
 			init_options = {
 				hostInfo = "neovim",
@@ -106,45 +54,31 @@ return {
 			},
 		})
 
-		-- Svelte
 		vim.lsp.config("svelte", {
-			capabilities = capabilities,
 			settings = {
 				svelte = {
 					plugin = {
-						typescript = {
-							enable = true,
-						},
-						css = {
-							enable = true,
-						},
+						typescript = { enable = true },
+						css = { enable = true },
 					},
 				},
 			},
 		})
 
-		-- Ruby (solargraph)
-		vim.lsp.config("solargraph", {
-			capabilities = capabilities,
-			cmd = { "bundle", "exec", "solargraph", "stdio" },
-			settings = {
-				solargraph = {
-					autoformat = true,
-					completion = true,
-					diagnostics = true,
-					folding = true,
-					references = true,
-					rename = true,
-					symbols = true,
+		vim.lsp.config("ruby_lsp", {
+			cmd = { vim.fn.expand("~/.rbenv/shims/ruby-lsp") },
+			init_options = {
+				formatter = "auto",
+				featuresConfiguration = {
+					inlayHint = {
+						implicitHashValue = true,
+						implicitRescue = true,
+					},
 				},
 			},
 		})
 
-		-- Go (gopls)
 		vim.lsp.config("gopls", {
-			capabilities = capabilities,
-			cmd = { "gopls" },
-			filetypes = { "go", "gomod", "gowork", "gotmpl" },
 			settings = {
 				gopls = {
 					analyses = {
@@ -156,16 +90,11 @@ return {
 			},
 		})
 
-		-- Ruby (rubocop LSP)
-		vim.lsp.config("rubocop", {
-			capabilities = capabilities,
-			cmd = { "bundle", "exec", "rubocop" },
+		vim.lsp.config("terraformls", {
+			filetypes = { "terraform", "terraform-vars", "hcl" },
 		})
-		vim.lsp.enable("rubocop")
 
-		-- Vue (vue_ls / Volar)
 		vim.lsp.config("vue_ls", {
-			capabilities = capabilities,
 			filetypes = { "vue" },
 			init_options = {
 				vue = {
@@ -177,9 +106,7 @@ return {
 			},
 		})
 
-		-- Lua (lua_ls)
 		vim.lsp.config("lua_ls", {
-			capabilities = capabilities,
 			settings = {
 				Lua = {
 					diagnostics = {
@@ -189,6 +116,118 @@ return {
 						callSnippet = "Replace",
 					},
 				},
+			},
+		})
+
+		vim.lsp.config("helm_ls", {
+			settings = {
+				["helm-ls"] = {
+					yamlls = {
+						path = "yaml-language-server",
+					},
+				},
+			},
+		})
+
+		vim.lsp.enable({
+			"ts_ls",
+			"svelte",
+			"ruby_lsp",
+			"gopls",
+			"terraformls",
+			"vue_ls",
+			"lua_ls",
+			"helm_ls",
+			"docker_compose_language_service",
+			"html",
+			"cssls",
+			"tailwindcss",
+			"marksman",
+		})
+
+		vim.keymap.set("n", "<leader>gr", function()
+			Snacks.picker.lsp_references()
+		end, { desc = "References" })
+
+		vim.keymap.set("n", "<leader>gd", vim.lsp.buf.declaration, { desc = "Go to declaration" })
+
+		vim.keymap.set("n", "<leader>gld", function()
+			Snacks.picker.lsp_definitions()
+		end, { desc = "Definitions" })
+
+		vim.keymap.set("n", "<leader>gi", function()
+			Snacks.picker.lsp_implementations()
+		end, { desc = "Implementations" })
+
+		vim.keymap.set("n", "<leader>gt", function()
+			Snacks.picker.lsp_type_definitions()
+		end, { desc = "Type definitions" })
+
+		vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
+
+		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
+
+		vim.keymap.set("n", "<leader>d", function()
+			vim.diagnostic.open_float(nil, { border = "single", source = "always" })
+		end, { desc = "Line diagnostics" })
+
+		vim.keymap.set("n", "<leader>D", function()
+			vim.lsp.buf.hover({ border = "single" })
+		end, { desc = "Hover documentation" })
+
+		vim.keymap.set("n", "<leader>rs", ":LspRestart<CR>", { desc = "Restart LSP" })
+
+		vim.keymap.set("n", "<leader>uh", function()
+			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+		end, { desc = "Toggle inlay hints" })
+
+		vim.api.nvim_create_autocmd("LspAttach", {
+			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+			callback = function(ev)
+				local client = vim.lsp.get_client_by_id(ev.data.client_id)
+				if not client then
+					return
+				end
+
+				if client.name == "ruby_lsp" then
+					vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+				end
+
+				if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+					local bufnr = ev.buf
+					local highlight_augroup = vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
+					vim.api.nvim_clear_autocmds({ buffer = bufnr, group = highlight_augroup })
+					vim.api.nvim_create_autocmd("CursorHold", {
+						buffer = bufnr,
+						group = highlight_augroup,
+						callback = vim.lsp.buf.document_highlight,
+					})
+					vim.api.nvim_create_autocmd("CursorMoved", {
+						buffer = bufnr,
+						group = highlight_augroup,
+						callback = vim.lsp.buf.clear_references,
+					})
+				end
+			end,
+		})
+
+		vim.diagnostic.config({
+			signs = {
+				text = {
+					[vim.diagnostic.severity.ERROR] = " ",
+					[vim.diagnostic.severity.WARN] = " ",
+					[vim.diagnostic.severity.HINT] = "󰠠 ",
+					[vim.diagnostic.severity.INFO] = " ",
+				},
+			},
+			virtual_text = {
+				source = "if_many",
+				spacing = 2,
+			},
+			severity_sort = true,
+			float = {
+				border = "single",
+				source = "always",
 			},
 		})
 	end,
