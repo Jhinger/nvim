@@ -26,6 +26,17 @@ opt.clipboard:append("unnamedplus")
 opt.splitright = true
 opt.splitbelow = true
 
+vim.filetype.add({
+	pattern = {
+		[".*/templates/.*%.tpl"] = "helm",
+		[".*/templates/.*%.ya?ml"] = "helm",
+		[".*/templates/.*%.txt"] = "helm",
+		["helmfile.*%.ya?ml"] = "helm",
+		["helmfile.*%.ya?ml.gotmpl"] = "helm",
+		["values.*%.ya?ml"] = "yaml.helm-values",
+	},
+})
+
 vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
 	callback = function()
 		opt.cursorline = true

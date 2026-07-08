@@ -12,14 +12,17 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup(
-  { { import = "gurshan.plugins" }, { import = "gurshan.plugins.lsp" }  },
+  { { import = "gurshan.plugins" }, { import = "gurshan.plugins.lsp" } },
   {
     checker = {
       enabled = true,
-      notify = false
+      notify = false,
     },
     change_detection = {
       notify = false,
-    }
+    },
+    rocks = {
+      enabled = false,
+    },
   }
 )

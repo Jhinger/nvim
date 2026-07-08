@@ -17,7 +17,7 @@ return {
 			lua = { "stylua" },
 		},
 		format_after_save = {
-			lsp_fallback = true,
+			lsp_format = "fallback",
 			async = true,
 			timeout_ms = 1000,
 		},
@@ -26,7 +26,7 @@ return {
 		{
 			"<leader>mp",
 			function()
-				require("conform").format({ lsp_fallback = true, async = false, timeout_ms = 1000 })
+				require("conform").format({ lsp_format = "fallback", async = false, timeout_ms = 1000 })
 			end,
 			mode = { "n", "v" },
 			desc = "Format file or range",

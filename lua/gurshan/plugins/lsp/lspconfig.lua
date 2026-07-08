@@ -54,6 +54,25 @@ return {
 			},
 		})
 
+		vim.lsp.config("vtsls", {
+			filetypes = { "vue" },
+			settings = {
+				vtsls = {
+					tsserver = {
+						globalPlugins = {
+							{
+								name = "@vue/typescript-plugin",
+								location = vim.fn.stdpath("data")
+									.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+								languages = { "vue" },
+								configNamespace = "typescript",
+							},
+						},
+					},
+				},
+			},
+		})
+
 		vim.lsp.config("svelte", {
 			settings = {
 				svelte = {
@@ -96,14 +115,6 @@ return {
 
 		vim.lsp.config("vue_ls", {
 			filetypes = { "vue" },
-			init_options = {
-				vue = {
-					hybridMode = false,
-				},
-				typescript = {
-					tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
-				},
-			},
 		})
 
 		vim.lsp.config("lua_ls", {
@@ -131,6 +142,7 @@ return {
 
 		vim.lsp.enable({
 			"ts_ls",
+			"vtsls",
 			"svelte",
 			"ruby_lsp",
 			"gopls",

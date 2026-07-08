@@ -1,16 +1,35 @@
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "svelte", "vue" },
-	callback = function()
-		vim.treesitter.start()
+	callback = function(event)
+		pcall(vim.treesitter.start, event.buf)
 	end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "lua", "typescript", "typescriptreact", "javascript", "javascriptreact", "python", "ruby", "html", "css", "yaml", "json", "markdown", "go", "terraform", "helm" },
+	pattern = {
+		"lua",
+		"typescript",
+		"typescriptreact",
+		"javascript",
+		"javascriptreact",
+		"python",
+		"ruby",
+		"html",
+		"css",
+		"yaml",
+		"yaml.helm-values",
+		"json",
+		"markdown",
+		"go",
+		"terraform",
+		"helm",
+	},
 	callback = function()
 		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 	end,
 })
+
+vim.treesitter.language.register("yaml", "yaml.helm-values")
 
 vim.api.nvim_create_autocmd("User", {
 	pattern = "SessionSavePost",
@@ -32,12 +51,16 @@ return {
 	},
 	config = function()
 		require("nvim-treesitter.configs").setup({
+			highlight = {
+				enable = true,
+			},
 			ensure_installed = {
 				"javascript",
 				"typescript",
 				"lua",
 				"ruby",
 				"svelte",
+				"vue",
 				"json",
 				"sql",
 				"tsx",

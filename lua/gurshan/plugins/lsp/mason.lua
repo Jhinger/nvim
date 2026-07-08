@@ -19,9 +19,13 @@ return {
 
 		mason_tool_installer.setup({
 			ensure_installed = {
+				"vue-language-server",
+				"vtsls",
+				"helm-ls",
 				"prettier",
 				"stylua",
 				"eslint_d",
+				"yaml-language-server",
 				"rufo",
 				"golangci-lint",
 				"tflint",
